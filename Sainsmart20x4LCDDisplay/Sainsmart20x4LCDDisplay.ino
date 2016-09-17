@@ -6,6 +6,8 @@
 
  This example uses F Malpartida's NewLiquidCrystal library. Obtain from:
  https://bitbucket.org/fmalpartida/new-liquidcrystal 
+ https://bitbucket.org/fmalpartida/new-liquidcrystal/downloads/LiquidCrystal_V1.2.1.zip
+ 
  
 */
 #include <Wire.h>
