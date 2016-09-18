@@ -41,21 +41,21 @@ double Datatransfer(char *data_buf,char num)//Data type converter：convert char
   double temp=0.0; 
   unsigned char i,j; 
   
-  if(data_buf[0]=='-')//负数的情况 
+  if(data_buf[0]=='-')//Negative situation
   { 
     i=1; 
-    //数组中的字符型数据转换成整数并累加 
+    //The array of character data converted to an integer and accumulate
     while(data_buf[i]!='.') 
       temp=temp*10+(data_buf[i++]-0x30); 
     for(j=0;j<num;j++) 
       temp=temp*10+(data_buf[++i]-0x30); 
-    //将转换后的整数转换成浮点数 
+    //Integer converted into a floating-point number
     for(j=0;j<num;j++) 
       temp=temp/10; 
-    //转换成负数 
+    //Converted into negative
     temp=0-temp; 
   } 
-  else//正数情况 
+  else//Positive cases
   { 
     i=0; 
     while(data_buf[i]!='.') 
@@ -70,42 +70,42 @@ double Datatransfer(char *data_buf,char num)//Data type converter：convert char
 void rec_init()//initial GPS 
 { 
   Wire.beginTransmission(GPSAddress); 
-  WireSend(0xff);//发送数据所在的地址       
+  WireSend(0xff);//Address where to send data    
   Wire.endTransmission();  
   
   Wire.beginTransmission(GPSAddress); 
-  Wire.requestFrom(GPSAddress,10);//要求从GPS器件读取10个字节 
+  Wire.requestFrom(GPSAddress,10);//It requires 10 bytes read from a GPS device
 } 
-char ID()//接收语句的ID 
+char ID()//Receiving data ID
 { 
   char i = 0; 
   char value[7]={ 
-    '$','G','P','G','G','A',','      };//要接收的GPS语句的ID内容 
+    '$','G','P','G','G','A',','      };//Content ID to receive GPS data
   char buff[7]={ 
     '0','0','0','0','0','0','0'      }; 
   
   while(1) 
   { 
-    rec_init();//接收数据初始化     
+    rec_init();//Receiving data initialization    
     while(Wire.available())    
     {  
-      buff[i] = WireRead();//接收串口的数据   
-      if(buff[i]==value[i])//对比是否是正确的ID 
+      buff[i] = WireRead();//To receive serial data  
+      if(buff[i]==value[i])//Contrast is the right ID 
       { 
         i++; 
         if(i==7) 
         { 
-          Wire.endTransmission();//结束接收 
-          return 1;//接收完毕返回1 
+          Wire.endTransmission();//Receiving end
+          return 1;//Been received returns
         } 
       } 
       else
         i=0; 
     } 
-    Wire.endTransmission();//结束接收 
+    Wire.endTransmission();//Receiving end
   } 
 } 
-void UTC()//获取时间信息 
+void UTC()//Get time information
 { 
   char i = 0,flag=0; 
   char value[7]={ 
@@ -113,7 +113,7 @@ void UTC()//获取时间信息
   char buff[7]={ 
     '0','0','0','0','0','0','0'       }; 
   char time[9]={ 
-    '0','0','0','0','0','0','0','0','0'    };//存放时间数据 
+    '0','0','0','0','0','0','0','0','0'    };//Data storage time 
   double t=0.0; 
   
   while(1) 
@@ -142,9 +142,9 @@ void UTC()//获取时间信息
         i++; 
         if(i==9) 
         { 
-          t=Datatransfer(time,2);//转换成浮点型数据 
-          t=t+80000.00;//将时间转换成北京时间 
-          Serial.println(t);//输出时间数据  
+          t=Datatransfer(time,2);//Converted into floating-point data
+          t=t+80000.00;//Converts time into GMT
+          Serial.println(t);//Data output time 
           Wire.endTransmission(); 
           return; 
         } 
@@ -153,8 +153,8 @@ void UTC()//获取时间信息
     Wire.endTransmission();  
   } 
 } 
-void rec_data(char *buff,char num1,char num2)//接收数据子函数 
-{                                            //*buff：存放接收数据的数组；num1：逗号数目；num2：数组长度。 
+void rec_data(char *buff,char num1,char num2)//Receiving data Functions
+{                                            //*buff：num1; storing the received data array: number comma; num2: array length.
   char i=0,count=0; 
   
   if(ID()) 
@@ -184,33 +184,33 @@ void rec_data(char *buff,char num1,char num2)//接收数据子函数
     } 
   } 
 } 
-void latitude()//获取纬度信息 
+void latitude()//Get latitude information
 { 
   char lat[10]={ 
-    '0','0','0','0','0','0','0','0','0','0' };//存放纬度数据 
-  rec_data(lat,1 ,10);//接收纬度数据 
-  Serial.println(Datatransfer(lat,5),5);//将纬度数据转换成浮点型数据并输出 
+    '0','0','0','0','0','0','0','0','0','0' };//Latitude data storage
+  rec_data(lat,1 ,10);//Latitude data received
+  Serial.println(Datatransfer(lat,5),5);//To convert latitude data into floating-point data and outputs
 } 
-void lat_dir()//获取纬度方向信息 
+void lat_dir()//Get latitude information
 { 
-  char dir[1]={'0'};//存放纬度方向数据 
-  rec_data(dir,2,1);//接收纬度方向数据 
-  printlnByte(dir[0]);//将纬度方向信息输出 
+  char dir[1]={'0'};//Latitude data storage
+  rec_data(dir,2,1);//Latitude data reception direction
+  printlnByte(dir[0]);//Latitude direction information output
 } 
-void  longitude()//获取经度信息 
+void  longitude()//Get longitude information
 { 
   char lon[11]={ 
-    '0','0','0','0','0','0','0','0','0','0','0' };//存放经度数据 
-  rec_data(lon,3,11);//接收经度数据 
-  Serial.println(Datatransfer(lon,5),5);//将经度数据转换成浮点型数据并输出 
+    '0','0','0','0','0','0','0','0','0','0','0' };//Longitude data storage
+  rec_data(lon,3,11);//Longitude data received
+  Serial.println(Datatransfer(lon,5),5);//Convert longitude data into floating-point data and outputs
 } 
-void lon_dir()//获取经度方向信息 
+void lon_dir()//Get longitude direction information
 { 
   char dir[1]={'0'}; 
   rec_data(dir,4,1); 
-  printlnByte(dir[0]);//将纬度方向信息输出 
+  printlnByte(dir[0]);//Latitude direction information output
 } 
-void altitude()//获取海拔信息 
+void altitude()//Get elevations
 { 
   char i=0,count=0; 
   char alt[8]={ 
@@ -247,8 +247,8 @@ void altitude()//获取海拔信息
 } 
 void setup() 
 { 
-  Wire.begin();//IIC初始化 
-  Serial.begin(9600);//设置波特率 
+  Wire.begin();//I2C initialization
+  Serial.begin(9600);//Set the baud rate
   Serial.println("DFRobot DFRduino GPS Shield v1.0"); 
   Serial.println("$GPGGA statement information: "); 
 } 
