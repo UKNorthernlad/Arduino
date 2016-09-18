@@ -1,10 +1,9 @@
 /*
  Example Arduino sketch for
- SainSmart IIC/I2C/TWI Serial 2004 20x4 LCD Module Shield For Arduino UNO MEGA R3
+ SainSmart IIC/I2C/TWI Serial 2004 20x4 LCD Module Shield For Arduino UNO MEGA R3.
  http://www.sainsmart.com/sainsmart-iic-i2c-twi-serial-2004-20x4-lcd-module-shield-for-arduino-uno-mega-r3.html
  
  This example uses F Malpartida's NewLiquidCrystal library. Obtain from:
- https://bitbucket.org/fmalpartida/new-liquidcrystal 
  https://bitbucket.org/fmalpartida/new-liquidcrystal/downloads/NewliquidCrystal_1.3.4.zip
 */
 #include <Wire.h>
