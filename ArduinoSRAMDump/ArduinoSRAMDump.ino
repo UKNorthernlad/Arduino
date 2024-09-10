@@ -3,6 +3,9 @@
 // SDRAM for volitile data - 2k
 // EEPROM for storage of non-volitile user data - 1k
 
+// Reference: https://docs.arduino.cc/learn/programming/memory-guide/
+// Reference: https://www.seeedstudio.com/blog/2021/04/26/managing-arduino-memory-flash-sram-eeprom/
+
 #define SDRAM_END 0x7ff
 
 void setup() {
@@ -18,14 +21,14 @@ void HexDumpSDRAM() {
   char stuff[] = "0123456789ABCDEF";
   
   // Some data allocated on the heap
-  char* message = (char*) malloc(20 * sizeof(char)); // Allocate memory for a string of 20 characters
+  char* message = (char*) malloc(200 * sizeof(char)); // Allocate memory for a string of 20 characters
   // Check if the memory has been allocated successfully
   if (message == NULL) {
-    Serial.println("Memory allocation failed");
+    Serial.println(F("Memory alloc failed")); // This hardcoded string won't appear in SDRAM as the F() macro ensures it's written to flash to save memory in SDRAM
     return;
   }
   // Write a string of data into the allocated memory
-  strncpy(message, "Hello, Arduino!",20);
+  strncpy(message, "This is data allocated in the heap. You will probably also see it in the initialized data section as this string is hardcoded into the binary.",200);
 
   Serial.begin(9600);
 
