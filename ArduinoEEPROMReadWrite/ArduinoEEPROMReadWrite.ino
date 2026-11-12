@@ -1,14 +1,14 @@
 // https://docs.arduino.cc/learn/programming/eeprom-guide/
 // ATMega328P has 3 types of memory:
 // Flash memory for programs
-// SDRAM for volitile data
+// SRAM for volitile data
 // 1k EEPROM for storage of non-volitile user data.
 
 #include <EEPROM.h>
 
 void setup() {
-  EraseEEPROM();
-  WriteString();
+  //EraseEEPROM();
+  //WriteString();
   //ReadString();
   HexDumpEEPROM();
 }
@@ -49,6 +49,7 @@ void ReadString() {
   }
 
   Serial.println("END");
+  Serial.end();
 }
 
 // Hex dump version of ReadString()
@@ -93,6 +94,8 @@ void HexDumpEEPROM() {
   Serial.println(addr,DEC);
   Serial.println(E2END,DEC);
   */
+
+  Serial.end();
 }
 
 void loop() {}
