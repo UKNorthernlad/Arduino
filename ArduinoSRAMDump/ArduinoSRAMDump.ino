@@ -13,10 +13,6 @@ void setup() {
 }
 
 void HexDumpSRAM() {
-  byte *addr = 0;  // address in SRAM
-  byte i, j, c;
-  byte buffer[16];
-
   // A local variable we would expect to see on the stack.
   char stuff[] = "0123456789ABCDEF";
   
@@ -31,12 +27,31 @@ void HexDumpSRAM() {
   strncpy(message, "This is data allocated on the heap. You will probably also see it in the initialized data section as this string is hardcoded into the binary.",200);
 
   Serial.begin(9600);
-
-  Serial.println(stuff);
+  Serial.println("32 general-purpose CPU registers (R0-R31):");
+  DisplayDump((byte *)0x0, (byte *)0x001F);
   Serial.println();
-  Serial.println("SRAM DUMP:");
+
+  Serial.println("Standard I/O registers:");
+  DisplayDump((byte *)0x0020, (byte *)0x005F);
+  Serial.println();
+
+  Serial.println("Extended I/O registers:");
+  DisplayDump((byte *)0x0060, (byte *)0x00FF);
+  Serial.println();
+
+  Serial.println("Internal SRAM (2 KB):");
+  DisplayDump((byte *)0x0100, (byte *)0x08FF);
+  Serial.println();
+}
+
+
+void DisplayDump(byte *startAddr, byte *endAddr) {
   
-  // Loop through the whole of SRAM, 16 bytes at a time.
+  byte i, j, c;
+  byte buffer[16];
+  byte *addr = startAddr;  // address in SRAM
+  
+  // Loop through the whole of provided range, 16 bytes at a time.
   do {       
     /* ------ Print the address padded with spaces ------ */
     if (addr < 0x10)   {Serial.print('0'); }  // space padding
@@ -73,7 +88,7 @@ void HexDumpSRAM() {
 
     addr = addr + 16;
 
-  } while (addr < SRAM_END);  // SRAM_END = 0x08ff = end of SRAM
+  } while (addr < endAddr); // Loop through all bytes in the provided range.
 }
 
 void loop() {}
