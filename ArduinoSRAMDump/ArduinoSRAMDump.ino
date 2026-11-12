@@ -1,19 +1,19 @@
 // ATMega328P has 3 types of memory:
 // Flash memory for programs - 32k
-// SDRAM for volitile data - 2k
+// SRAM for volitile data - 2k
 // EEPROM for storage of non-volitile user data - 1k
 
 // Reference: https://docs.arduino.cc/learn/programming/memory-guide/
 // Reference: https://www.seeedstudio.com/blog/2021/04/26/managing-arduino-memory-flash-sram-eeprom/
 
-#define SDRAM_END 0x08ff
+#define SRAM_END 0x08ff
 
 void setup() {
-  HexDumpSDRAM();
+  HexDumpSRAM();
 }
 
-void HexDumpSDRAM() {
-  byte *addr = 0;  // address in SDRAM
+void HexDumpSRAM() {
+  byte *addr = 0;  // address in SRAM
   byte i, j, c;
   byte buffer[16];
 
@@ -24,7 +24,7 @@ void HexDumpSDRAM() {
   char* message = (char*) malloc(200 * sizeof(char)); // Allocate memory for a string of 200 characters
   // Check if the memory has been allocated successfully
   if (message == NULL) {
-    Serial.println(F("Memory alloc failed")); // This hardcoded string won't appear in SDRAM as the F() macro ensures it's written to flash to save memory in SDRAM
+    Serial.println(F("Memory alloc failed")); // This hardcoded string won't appear in SRAM as the F() macro ensures it's written to flash to save memory in SRAM
     return;
   }
   // Write a string of data into the allocated memory
@@ -34,9 +34,9 @@ void HexDumpSDRAM() {
 
   Serial.println(stuff);
   Serial.println();
-  Serial.println("SDRAM DUMP:");
+  Serial.println("SRAM DUMP:");
   
-  // Loop through the whole of SDRAM, 16 bytes at a time.
+  // Loop through the whole of SRAM, 16 bytes at a time.
   do {       
     /* ------ Print the address padded with spaces ------ */
     if (addr < 0x10)   {Serial.print('0'); }  // space padding
@@ -45,7 +45,7 @@ void HexDumpSDRAM() {
     Serial.print((int)addr, HEX);           // starting address for line
     Serial.print("  ");                     // seperator, could be replaced with a tab ("\t")
 
-    /* Read 16 characters from SDRAM into the buffer */  
+    /* Read 16 characters from SRAM into the buffer */  
     for (i = 0; i < 16; ++i)                // 16 bytes at a time
     {
       c= *(addr + i);  // read one byte
@@ -73,7 +73,7 @@ void HexDumpSDRAM() {
 
     addr = addr + 16;
 
-  } while (addr < SDRAM_END);  // SDRAM_END = 0x7ff = end of SDRAM
+  } while (addr < SRAM_END);  // SRAM_END = 0x08ff = end of SRAM
 }
 
 void loop() {}
